@@ -24,13 +24,31 @@ function checkPasswordStrength(password) {
     }
 }
 
-function main() {
-    const password = generatePassword(16);
-    fs.writeFileSync("sifre.txt", password + "\n", { flag: "a" });
+function generateMultiplePasswords(count = 5, length = 16) {
+    const passwords = [];
+    for (let i = 0; i < count; i++) {
+        let password = generatePassword(length);
+        password = shufflePassword(password);
+        passwords.push(password);
+        fs.writeFileSync("sifre.txt", password + "\n", { flag: "a" });
+        console.log("Generisana šifra:", password);
+        console.log(checkPasswordStrength(password));
+        console.log("-----------------------------");
+    }
+    return passwords;
+}
 
-    console.log("Generisana šifra:", password);
-    console.log(checkPasswordStrength(password));
-    console.log("Šifra uspješno spremljena u sifre.txt");
+function shufflePassword(password) {
+    const arr = password.split('');
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr.join('');
+}
+
+function main() {
+    generateMultiplePasswords(5, 16);
 }
 
 main();
